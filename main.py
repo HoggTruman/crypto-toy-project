@@ -6,7 +6,6 @@ from datetime import datetime as dt
 import matplotlib.pyplot as plt
 
 
-
 class CryptoTool:
     base_url = 'https://api.coingecko.com/api/v3/'
 
@@ -43,8 +42,8 @@ class CryptoTool:
         parameters = {'vs_currency': _vs, 'days': 'max'}
 
         if _coin in self.coin_df.index:
-            coin_id = self.coin_df.loc[_coin]['id']
             if _vs in self.vs_currencies_df.values:
+                coin_id = self.coin_df.loc[_coin]['id']
                 coin_data = requests.get(f'{self.base_url}/coins/{coin_id}/market_chart', params=parameters)
                 if dl:
                     with open(self.user_dir + f'{coin_id}_{_vs}.json', 'w') as f:
@@ -61,8 +60,7 @@ class CryptoTool:
         else:
             print(f"{coin} not recognised")
 
-
-    def plot_history(self, coin, vs, key='prices', num_days=0, use_current=False):
+    def plot_history(self, coin, vs, key='prices', num_days=None, use_current=False):
         if use_current:
             with open(f'{self.user_dir}{coin.lower().strip()}_{vs.lower().strip()}.json') as f:
                 coin_data = json.load(f)
