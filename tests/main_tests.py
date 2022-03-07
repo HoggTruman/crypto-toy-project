@@ -114,7 +114,7 @@ class TestGetCoinHistory:
         expected = "Please enter the name of your coin! (symbols are not unique)\ne.g. luna (wormhole), terra, wrapped terra\n"
         assert obtained == expected
 
-    def test_no_dl(self):
+    def test_no_download(self):
         coin = 'bitcoin'
         vs = 'usd'
         data = test_tool.get_coin_history(coin, vs, download=False)

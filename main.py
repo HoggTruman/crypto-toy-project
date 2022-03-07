@@ -36,25 +36,29 @@ class CryptoTool:
         # create a dataframe for vs_currencies
         self.vs_currencies_df = pd.DataFrame(vs_currencies.json())
 
-    def get_coin_history(self, coin, vs, download=True): # add something so if the symbol is unique just use this coin
+
+    def _fetch_data(self, coin, vs, download):
+        parameters = {'vs_currency': vs, 'days': 'max'}
+        coin_id = self.coin_df.loc[coin]['id']
+        coin_data = requests.get(f'{self.base_url}/coins/{coin_id}/market_chart', params=parameters)
+        if download:
+            with open(self.user_dir + f'{coin_id}_{vs}.json', 'w') as f:
+                f.write(json.dumps(coin_data.json()))
+            print(f'Data successfully downloaded to {self.user_dir}{coin_id}_{vs}.json')
+        else:
+            return coin_data.json()
+
+
+    def get_coin_history(self, coin, vs, download=True):
         _coin = coin.lower().strip()
         _vs = vs.lower().strip()
-        parameters = {'vs_currency': _vs, 'days': 'max'}
 
         if _coin in self.coin_df.index:
             if _vs in self.vs_currencies_df.values:
-                coin_id = self.coin_df.loc[_coin]['id']
-                coin_data = requests.get(f'{self.base_url}/coins/{coin_id}/market_chart', params=parameters)
-                if download:  # USE HELPER FUNCTION??
-                    with open(self.user_dir + f'{coin_id}_{_vs}.json', 'w') as f:
-                        f.write(json.dumps(coin_data.json()))
-                    print(f'Data successfully downloaded to {self.user_dir}{coin_id}_{_vs}.json')
-                else:
-                    return coin_data.json()
+                return self._fetch_data(_coin, _vs, download)
             else:
                 print(f"vs currency '{vs}' not recognised")
-
-        elif _coin in self.coin_df['symbol'].values:  # if the symbol is found, suggests coins with the symbol
+        elif _coin in self.coin_df['symbol'].values:
             print("Please enter the name of your coin! (symbols are not unique)")
             print("e.g. " + ", ".join(self.coin_df[self.coin_df['symbol'] == _coin].index))
         else:
@@ -76,10 +80,10 @@ class CryptoTool:
 
 
 
-if __name__ == "__main__":
-    test = CryptoTool()
-    # test.get_coin_history('cardano', 'usd')
-    test.plot_history('cardano', 'usd', key='total_volumes')
+# if __name__ == "__main__":
+#     test = CryptoTool()
+#     # test.get_coin_history('cardano', 'usd')
+#     test.plot_history('cardano', 'usd', key='total_volumes')
 
 
 
