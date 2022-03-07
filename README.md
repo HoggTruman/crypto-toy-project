@@ -53,10 +53,21 @@ ct.get_coin_history(coin, vs, download=True)
 ### Plot History
 Plots a graph of the history of a coin. 
 ```
-ct.plot_history(self, coin, vs, key='prices', num_days=None, use_current=False):
+ct.plot_history(coin, vs, key='prices', days=None):
 ```
 
--- TO BE UPDATED --
+- **Input**: 
+  - **coin**: 
+    - id of the desired coin (_e.g. bitcoin, ethereum, ..._)
+  - **vs**: 
+    - currency to compare it to (_e.g. usd, btc, ..._)
+  - **key** (_optional_):     
+    - what data to plot (`'prices'`, `'market_caps'` or `'total_volumes'`)
+    - default: `'prices'`
+  - **days** (_optional_):
+    - integer of number of days of data to be plotted
+    - plots entire history by default
+   
 
 
 

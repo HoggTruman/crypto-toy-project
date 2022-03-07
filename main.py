@@ -45,7 +45,7 @@ class CryptoTool:
             if _vs in self.vs_currencies_df.values:
                 coin_id = self.coin_df.loc[_coin]['id']
                 coin_data = requests.get(f'{self.base_url}/coins/{coin_id}/market_chart', params=parameters)
-                if download:
+                if download:  # USE HELPER FUNCTION??
                     with open(self.user_dir + f'{coin_id}_{_vs}.json', 'w') as f:
                         f.write(json.dumps(coin_data.json()))
                     print(f'Data successfully downloaded to {self.user_dir}{coin_id}_{_vs}.json')
@@ -60,16 +60,13 @@ class CryptoTool:
         else:
             print(f"{coin} not recognised")
 
-    def plot_history(self, coin, vs, key='prices', num_days=None, use_current=False):
-        if use_current:
-            with open(f'{self.user_dir}{coin.lower().strip()}_{vs.lower().strip()}.json') as f:
-                coin_data = json.load(f)
-        else:
-            coin_data = self.get_coin_history(coin, vs, download=False)
+
+    def plot_history(self, coin, vs, key='prices', days=None):
+        coin_data = self.get_coin_history(coin, vs, download=False)
 
         if coin_data:
-            data = [x[1] for x in coin_data[key][-num_days:]]
-            dates = [dt.fromtimestamp(x[0]/1000) for x in coin_data[key][-num_days:]]
+            data = [x[1] for x in coin_data[key][-days:]]
+            dates = [dt.fromtimestamp(x[0]/1000) for x in coin_data[key][-days:]]
             plt.plot(dates, data)
             plt.yscale("log")
             plt.title(f'{coin.title()} / {vs.upper()} ({key[:-1].title().replace("_"," ")})')
@@ -79,12 +76,10 @@ class CryptoTool:
 
 
 
-
-
 if __name__ == "__main__":
     test = CryptoTool()
     # test.get_coin_history('cardano', 'usd')
-    test.plot_history('cardano', 'usd', key='total_volumes', use_current=True)
+    test.plot_history('cardano', 'usd', key='total_volumes')
 
 
 
