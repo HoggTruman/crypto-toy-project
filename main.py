@@ -36,7 +36,7 @@ class CryptoTool:
         # create a dataframe for vs_currencies
         self.vs_currencies_df = pd.DataFrame(vs_currencies.json())
 
-    def get_coin_history(self, coin, vs, dl=True): # add something so if the symbol is unique just use this coin
+    def get_coin_history(self, coin, vs, download=True): # add something so if the symbol is unique just use this coin
         _coin = coin.lower().strip()
         _vs = vs.lower().strip()
         parameters = {'vs_currency': _vs, 'days': 'max'}
@@ -45,7 +45,7 @@ class CryptoTool:
             if _vs in self.vs_currencies_df.values:
                 coin_id = self.coin_df.loc[_coin]['id']
                 coin_data = requests.get(f'{self.base_url}/coins/{coin_id}/market_chart', params=parameters)
-                if dl:
+                if download:
                     with open(self.user_dir + f'{coin_id}_{_vs}.json', 'w') as f:
                         f.write(json.dumps(coin_data.json()))
                     print(f'Data successfully downloaded to {self.user_dir}{coin_id}_{_vs}.json')
@@ -65,7 +65,7 @@ class CryptoTool:
             with open(f'{self.user_dir}{coin.lower().strip()}_{vs.lower().strip()}.json') as f:
                 coin_data = json.load(f)
         else:
-            coin_data = self.get_coin_history(coin, vs, dl=False)
+            coin_data = self.get_coin_history(coin, vs, download=False)
 
         if coin_data:
             data = [x[1] for x in coin_data[key][-num_days:]]

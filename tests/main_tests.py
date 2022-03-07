@@ -117,7 +117,7 @@ class TestGetCoinHistory:
     def test_no_dl(self):
         coin = 'bitcoin'
         vs = 'usd'
-        data = test_tool.get_coin_history(coin, vs, dl=False)
+        data = test_tool.get_coin_history(coin, vs, download=False)
         assert list(data.keys()) == ["prices", "market_caps", "total_volumes"]
 
 
