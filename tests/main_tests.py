@@ -121,3 +121,6 @@ class TestGetCoinHistory:
         assert list(data.keys()) == ["prices", "market_caps", "total_volumes"]
 
 
+# NEED TESTS FOR COIN_VS_COIN_HISTORY
+
+

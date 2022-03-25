@@ -67,6 +67,12 @@ ct.plot_history(coin, vs, key='prices', days=None):
   - **days** (_optional_):
     - integer of number of days of data to be plotted
     - plots entire history by default
+
+
+### Coin vs Coin History
+Obtains the full history for the requested coin-coin pair
+
+NEEDS UPDATING
    
 
 
