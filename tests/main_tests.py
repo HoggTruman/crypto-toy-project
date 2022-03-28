@@ -121,6 +121,46 @@ class TestGetCoinHistory:
         assert list(data.keys()) == ["prices", "market_caps", "total_volumes"]
 
 
-# NEED TESTS FOR COIN_VS_COIN_HISTORY
+@pytest.mark.coin_vs_coin_history
+class TestCoinVsCoinHistory:
+    def test_bitcoin_cardano(self):
+        coin = 'bitcoin'
+        vs_coin = 'cardano'
+        data = test_tool.coin_vs_coin_history(coin, vs_coin)
+        file_path = os.getcwd() + '/data/user/bitcoin_cardano_prices.json'
+        assert os.path.isfile(file_path)
+
+    def test_bitcoin_ethereum_market_caps(self):
+        coin = 'bitcoin'
+        vs_coin = 'ethereum'
+        data = test_tool.coin_vs_coin_history(coin, vs_coin, key='market_caps')
+        file_path = os.getcwd() + '/data/user/bitcoin_ethereum_market_caps.json'
+        assert os.path.isfile(file_path)
+
+    def test_no_download(self):  # tests the first value is correct, would be better to test something more concrete
+        coin = 'bitcoin'
+        vs_coin = 'ethereum'
+        data = test_tool.coin_vs_coin_history(coin, vs_coin, download=False)
+        assert round(data.loc[1438905600000], 8) == round(98.3567052632, 8)
+
+    def test_bad_key(self):
+        coin = 'bitcoin'
+        vs_coin = 'polkadot'
+        key = 'INVALID_KEY'
+        file_path = os.getcwd() + '/data/user/bitcoin_polkadot_INVALID_KEY.json'
+        correct_error = False
+        try:
+            data = test_tool.coin_vs_coin_history(coin, vs_coin, key)
+        except KeyError:
+            correct_error = True
+            # we expect a key error as there is no 'INVALID_KEY' section of the data for bitcoin or polkadot
+            pass
+
+        assert not os.path.isfile(file_path) and correct_error
+
+
+
+
+
 
 
