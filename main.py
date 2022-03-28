@@ -40,10 +40,10 @@ class CryptoTool:
     def _to_dataframe(data):
         return pd.concat([pd.DataFrame(data[k], columns=['date', k]).set_index('date') for k in data], axis=1)
 
-    def _write(self, data, cur_1, cur_2):  # pass in a json string for data??
-        with open(self.user_dir + f'{cur_1}_{cur_2}.json', 'w') as f:
+    def _write(self, data, cur_1, cur_2, key=''):  # pass in a json string for data??
+        with open(self.user_dir + f'{cur_1}_{cur_2}{key}.json', 'w') as f:
             f.write(data)
-        print(f'Data successfully written to {self.user_dir}{cur_1}_{cur_2}.json')
+        print(f'Data successfully written to {self.user_dir}{cur_1}_{cur_2}{key}.json')
 
 
     def _fetch_data(self, coin, vs, download):
@@ -89,13 +89,12 @@ class CryptoTool:
         coin_df = self.get_coin_history(coin, 'usd', download=False)
         coin_vs_df = self.get_coin_history(vs_coin, 'usd', download=False)
 
-
         compare_df = (coin_df[key]/coin_vs_df[key]).dropna()
         coin_id = self.coin_df.loc[coin]["id"]
         vs_coin_id = self.coin_df.loc[vs_coin]["id"]
 
-        if download:  # passes in a dataframe rather than request object so will have issues
-            self._write(compare_df.to_json(), coin_id, vs_coin_id)
+        if download:
+            self._write(compare_df.to_json(), coin_id, vs_coin_id, '_'+key)
         else:
             return compare_df
 
@@ -105,7 +104,9 @@ if __name__ == "__main__":
     test = CryptoTool()
     # test.get_coin_history('cardano', 'usd')
     # test.plot_history('cardano', 'usd', key='total_volumes')
-    test.coin_vs_coin_history('cardano', 'bitcoin',download=False)
+    test.get_coin_history('ethereum', 'usd')
+    data = test.coin_vs_coin_history('cardano', 'bitcoin', download=False)
+    print(type(data))
 
 
 
