@@ -14,9 +14,7 @@ These areas include:
 
 ### Additional Python Libraries
 
-* pandas
-* matplotlib
-* requests
+NEED TO CREATE A REQUIREMENTS.TXT FILE
 
 
 ### Usage
