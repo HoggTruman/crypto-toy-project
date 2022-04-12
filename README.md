@@ -12,11 +12,6 @@ These areas include:
 
 ## Getting Started
 
-### Additional Python Libraries
-
-NEED TO CREATE A REQUIREMENTS.TXT FILE 
-
-
 ### Usage
 
 
