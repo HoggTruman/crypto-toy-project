@@ -101,12 +101,14 @@ class CryptoTool:
 
 
 if __name__ == "__main__":
-    test = CryptoTool()
-    # test.get_coin_history('cardano', 'usd')
-    # test.plot_history('cardano', 'usd', key='total_volumes')
-    test.get_coin_history('ethereum', 'usd')
-    data = test.coin_vs_coin_history('cardano', 'bitcoin', download=False)
-    print(type(data))
+    # manual testing
+    # test = CryptoTool()
+    # # test.get_coin_history('cardano', 'usd')
+    # # test.plot_history('cardano', 'usd', key='total_volumes')
+    # test.get_coin_history('ethereum', 'usd')
+    # data = test.coin_vs_coin_history('cardano', 'bitcoin', download=False)
+    # print(type(data))
+    pass
 
 
 
