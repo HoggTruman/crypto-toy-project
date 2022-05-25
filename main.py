@@ -36,9 +36,12 @@ class CryptoTool:
         # create a dataframe for vs_currencies
         self.vs_currencies_df = pd.DataFrame(vs_currencies.json())
 
+
+    """ HELPER METHODS """
     @staticmethod
     def _to_dataframe(data):
         return pd.concat([pd.DataFrame(data[k], columns=['date', k]).set_index('date') for k in data], axis=1)
+
 
     def _write(self, data, cur_1, cur_2, key=''):  # pass in a json string for data??
         with open(self.user_dir + f'{cur_1}_{cur_2}{key}.json', 'w') as f:
@@ -56,6 +59,7 @@ class CryptoTool:
             return self._to_dataframe(coin_data.json())
 
 
+    """ USER METHODS """
     def get_coin_history(self, coin, vs, download=True):
         _coin = coin.lower().strip()
         _vs = vs.lower().strip()
@@ -72,6 +76,20 @@ class CryptoTool:
             print(f"{coin} not recognised")
 
 
+    def coin_vs_coin_history(self, coin, vs_coin, key='prices', download=True):
+        coin_df = self.get_coin_history(coin, 'usd', download=False)
+        coin_vs_df = self.get_coin_history(vs_coin, 'usd', download=False)
+
+        compare_df = (coin_df[key]/coin_vs_df[key]).dropna()
+        coin_id = self.coin_df.loc[coin]["id"]
+        vs_coin_id = self.coin_df.loc[vs_coin]["id"]
+
+        if download:
+            self._write(compare_df.to_json(), coin_id, vs_coin_id, '_'+key)
+        else:
+            return compare_df
+
+
     def plot_history(self, coin, vs, key='prices', days=None):
         coin_data = self.get_coin_history(coin, vs, download=False)
 
@@ -85,18 +103,7 @@ class CryptoTool:
             plt.show()
 
 
-    def coin_vs_coin_history(self, coin, vs_coin, key='prices', download=True):
-        coin_df = self.get_coin_history(coin, 'usd', download=False)
-        coin_vs_df = self.get_coin_history(vs_coin, 'usd', download=False)
 
-        compare_df = (coin_df[key]/coin_vs_df[key]).dropna()
-        coin_id = self.coin_df.loc[coin]["id"]
-        vs_coin_id = self.coin_df.loc[vs_coin]["id"]
-
-        if download:
-            self._write(compare_df.to_json(), coin_id, vs_coin_id, '_'+key)
-        else:
-            return compare_df
 
 
 
